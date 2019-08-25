@@ -25,10 +25,34 @@ bool dfs(Board current, Board final) {
   return false;
 }
 
+vector<Board> bfs(Board initial, Board final) {
+  queue<pair<Board, vector<Board>>> q;
+  q.emplace(initial, vector<Board>({initial}));
+  while(!q.empty()) {
+    auto curr = q.front();
+    q.pop();
+    if(curr.first == final) return curr.second;
+    for(Board n: curr.first.getNeigbors()) {
+      bool ok = false;
+      for(Board old: visited) {
+        if(old == n) {
+          ok = true;
+          break;
+        }
+      }
+      if(ok) continue;
+      curr.second.push_back(n);
+      q.emplace(n, curr.second);
+      curr.second.pop_back();
+    }
+  }
+  return vector<Board>();
+}
+
 vector<Board> solve(Board initial, Board final) {
   visited.clear();
   solution.clear();
-  solution.push_back(initial);
-  dfs(initial, final);
-  return solution;
+//  solution.push_back(initial);
+//  dfs(initial, final);
+  return bfs(initial, final);
 }
