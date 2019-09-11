@@ -63,7 +63,6 @@ vector<Board> Astar(Board initial, Board final) {
     auto t = Q.top();
     Q.pop();
     Board b = get_from_hash(t.second);
-    std::cout << b << '\n';
     if(b == final) {
       break;
     }
@@ -76,12 +75,16 @@ vector<Board> Astar(Board initial, Board final) {
       Q.push({x.getHval(final), x.get_hash()});
     }
   }
+  if(par.find(final.get_hash()) == par.end()) {
+    return vector<Board>();
+  }
   vector<Board> path;
   u64 curr = final.get_hash();
   while(par[curr] != curr) {
     path.push_back(get_from_hash(curr));
     curr = par[curr];
   }
+  path.push_back(initial);
   return path;
 }
 
