@@ -21,6 +21,16 @@ pair<int, int> Board::get_free_tile() {
   return pair<int, int>{-1, -1};
 }
 
+int Board::getHval(const Board& final) {
+  int h = 0;
+  for(int i = 0; i < 3; ++i) {
+    for(int j = 0; j < 3; ++j) {
+      if(board[i][j] != final.board[i][j]) h++;
+    }
+  }
+  return h;
+}
+
 vector<Board> Board::getNeigbors() {
   pair<int, int> free = get_free_tile();
   assert(free.first != -1);
@@ -46,6 +56,27 @@ bool operator== (Board b, Board other) {
     }
   }
   return true;
+}
+
+u64 Board::get_hash() {
+  u64 hash = 0;
+  for(int i = 0; i < 3; ++i) {
+    for(int j = 0; j < 3; ++j) {
+      hash = hash * 10 + board[i][j];
+    }
+  }
+  return hash;
+}
+
+Board get_from_hash(u64 hash) {
+  vector<vector<int>> b(3, vector<int>(3, 0));
+  for(int i = 2; i >= 0; --i) {
+    for(int j = 2; j >= 0; --j) {
+      b[i][j] = hash % 10;
+      hash /= 10;
+    }
+  }
+  return Board(b);
 }
 
 std::ostream& operator << (std::ostream& out, const Board& b) {

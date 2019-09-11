@@ -17,8 +17,11 @@ const vector<vector<int>> default_start = {
   vector<int>{7, 5, 8}
 };
 
-void get_input() {
-
+void get_input(Board &initial, Board &final) {
+  cout << "Enter initial state\n";
+  cin >> initial;
+  cout << "Enter Goal State\n";
+  cin >> final;
 }
 
 int main() {
@@ -26,7 +29,7 @@ int main() {
   Board initial(default_start);
   Board goal(default_final);
 
-  get_input();
+  get_input(initial, goal);
 
   vector<Board> solutionf = solve(initial, goal);
   if(solutionf.empty()) {

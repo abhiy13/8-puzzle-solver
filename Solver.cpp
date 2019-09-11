@@ -8,7 +8,7 @@ bool dfs(Board current, Board final) {
   if(current == final) {
     solution.emplace_back(current);
     return true;
-  }  
+  }
   for(Board old: visited) {
     if(old == current) {
       return false;
@@ -49,10 +49,47 @@ vector<Board> bfs(Board initial, Board final) {
   return vector<Board>();
 }
 
+template<typename T>
+using minpq = priority_queue<T, vector<T>, std::greater<T>>;
+
+vector<Board> Astar(Board initial, Board final) {
+  vector<Board> ans;
+  minpq<pair<int, u64>> Q;
+  Q.push({initial.getHval(final), initial.get_hash()}); 
+  map<u64, u64> par;
+  par[initial.get_hash()] = initial.get_hash();
+  set<u64> visited;
+  while(!Q.empty()) {
+    auto t = Q.top();
+    Q.pop();
+    Board b = get_from_hash(t.second);
+    std::cout << b << '\n';
+    if(b == final) {
+      break;
+    }
+    u64 par_hash = b.get_hash();
+    visited.insert(par_hash);
+    for(Board x: b.getNeigbors()) {
+      u64 my_hash = x.get_hash();
+      if(visited.count(my_hash)) continue;
+      par[my_hash] = par_hash;
+      Q.push({x.getHval(final), x.get_hash()});
+    }
+  }
+  vector<Board> path;
+  u64 curr = final.get_hash();
+  while(par[curr] != curr) {
+    path.push_back(get_from_hash(curr));
+    curr = par[curr];
+  }
+  return path;
+}
+
 vector<Board> solve(Board initial, Board final) {
-  visited.clear();
-  solution.clear();
+//  visited.clear();
+//  solution.clear();
 //  solution.push_back(initial);
 //  dfs(initial, final);
-  return bfs(initial, final);
+// return bfs(initial, final);
+  return Astar(initial, final);
 }

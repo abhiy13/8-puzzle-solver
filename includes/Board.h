@@ -7,6 +7,7 @@
 
 using std::vector;
 using std::pair;
+using u64 = unsigned long long;
 
 class Board {
 
@@ -22,6 +23,8 @@ public:
 
   pair<int, int> get_free_tile();
   vector<Board> getNeigbors();
+  int getHval(const Board &final);
+  u64 get_hash();
 
   friend std::ostream& operator << (std::ostream& out, const Board& b);
   friend std::istream& operator >> (std::istream& in, Board &b);
@@ -34,4 +37,7 @@ public:
     }
   }
 };
+
+Board get_from_hash(u64 hash);
+
 #endif
